@@ -8,7 +8,7 @@
 {% block body %}
     <h1>{{ title }}</h1>
 
-    <table>
+    <table class="table">
         <thead>
         <tr>
             <th>ID</th>
@@ -19,20 +19,16 @@
         </thead>
 
         <tbody>
-
-
         {% for user in users %}
             <tr>
-                <td>{{ user.id }}</td>
+                <th>{{ user.id }}</th>
                 <td>{{ user.username }}</td>
                 <td>{{ user.email }}</td>
                 <td>
-                    <a href="{{ path('app_user_show', {'id':user.id}) }}">Show</a>
-                    <a href="{{ path('app_user_edit', {'id':user.id}) }}">Edit</a>
+                    <a class="btn btn-warning" href="{{ path('app_user_show', {'id': user.id}) }}">Show</a>
+                    <a class="btn btn-secondary" href="{{ path('app_user_edit', {'id': user.id}) }}">Edit</a>
                 </td>
             </tr>
-
-
         {% endfor %}
         </tbody>
 
