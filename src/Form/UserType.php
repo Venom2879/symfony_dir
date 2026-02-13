@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -19,11 +20,19 @@ class UserType extends AbstractType
         $builder
             ->add('username', TextType::class, [
                 'constraints' => [
-                    new Length(['min' => 2, 'max' => 6], maxMessage: 'Vous etes trop grand', minMessage: 'Vous avez pas assez de caractères')
+                    new Length(['min' => 2, 'max' => 16], maxMessage: 'Vous etes trop grand', minMessage: 'Vous avez pas assez de caractères')
                 ]
             ] )
             ->add('email', EmailType::class)
             ->add('password', PasswordType::class)
+            ->add('role', choiceType::class, [
+                'mapped' => false,
+                'placeholder' => 'Choisissez une option',
+                'choices' => [
+                    'Aucun' => null,
+                    'Admin' => 'ROLE_ADMIN',
+                ]
+            ])
             ->add('submit', SubmitType::class)
         ;
     }
