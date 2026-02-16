@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base-admin.html.twig' %}
 
 {% block title %}Editer{% endblock %}
 
@@ -10,7 +10,8 @@
         <button type="submit" class="btn btn-danger">Delete</button>
     </form>
 
-    {% include 'user/_form.html.twig' %}
+    {% include 'admin/user/_form.html.twig' %}
+
     {#    ancienne methode #}
     {#    {{ form(form) }} #}
 
