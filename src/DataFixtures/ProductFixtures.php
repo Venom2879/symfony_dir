@@ -20,19 +20,24 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
 
 //         TODO: Implement load() method.
 // nous devrons supprimer le dossier public/uploads/products a chaque fixtures
+
+        $destDir = dirname(__DIR__) . '/../public/uploads/products';
+
+        if (!is_dir($destDir)) {
+            mkdir($destDir, 0775, true);
+        } else {
+            exec('rm -rf ' . $destDir);
+            mkdir($destDir, 0775, true);
+        }
+
         for ($i = 0; $i < 10; $i++) {
             $product = new Product();
 
             $filePath = $faker->image(dir: '/tmp', width: 640, height: 480);
 
             if ($filePath) {
-
-
             $ext = pathinfo($filePath, PATHINFO_EXTENSION);
             $filename = $faker->uuid() . '.' . $ext;
-
-            $destDir = dirname(__DIR__) . '/../public/uploads/products';
-            if (!is_dir($destDir)) mkdir($destDir, 0775, true);
 
             copy($filePath, $destDir . '/' . $filename);
             $product->setImageFilename($filename);
