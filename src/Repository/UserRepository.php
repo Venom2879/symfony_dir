@@ -16,6 +16,29 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
+    public function findPaginate(?int $size = 10, ?int $page = 1): array
+    {
+        $offset = ($page - 1) * $size;
+
+        $count = $this->createQueryBuilder('u')
+            ->select('COUNT(u)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        //     SELECT * FROM product p LIMIT :size OFFSET :offset
+        $users = $this->createQueryBuilder('u')
+            ->setFirstResult($offset)
+            ->setMaxResults($size)
+            ->getQuery()
+            ->getResult();
+
+        return [
+            'users' => $users,
+            'count' => $count
+        ];
+
+    }
+
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */

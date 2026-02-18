@@ -24,5 +24,4 @@ class CategoryRepositoryTest extends KernelTestCase
         $category[] = $container->get(CategoryRepository::class)->findOneBy(['title' => 'Chaussure']);
 $this->assertEquals(1, count($category));
     }
-
 }

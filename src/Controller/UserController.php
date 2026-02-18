@@ -23,15 +23,16 @@ final class UserController extends AbstractController
 {
 
     #[route(name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    public function index(Request $request, UserRepository $userRepository): Response
     {
+        $size = isset($request->query->all()['size']) ? (int)$request->query->get('size') : 10;
+        $page = isset($request->query->all()['page']) ? (int)$request->query->get('page') : 1;
 
-        $users = $userRepository->findAll();
-        dump($users);
+        $data = $userRepository->findPaginate($size, $page);
 
         return $this->render('admin/user/index.html.twig', [
-            'title' => 'Voici ma page index user',
-            'users' => $users
+            'users' => $data['users'],
+            'count' => $data['count'],
         ]);
     }
 
