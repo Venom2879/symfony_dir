@@ -2,14 +2,17 @@
 
 namespace App\Tests\Controller;
 
+use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 
 class ProductControllerTest extends WebTestCase
 {
+    private static ?int $id = null;
+
     public function testNewProduct(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
         $user = new InMemoryUser('admin', 'password', ['ROLE_ADMIN']);
         $client->loginUser($user);
 
@@ -19,11 +22,39 @@ class ProductControllerTest extends WebTestCase
         $form = $buttonCrawlerNode->form();
 
         $form['product[title]'] = 'Sneakers';
-        $form['product[description]'] = 'Blablabla!';
+        $form['product[description]'] = 'Voici la description de mon produit';
         $form['product[price]'] = 123;
         $form['product[category]']->select('Pantalon');
 
         $client->submit($form);
+
+        $container = self::getContainer();
+        $product = $container->get(ProductRepository::class)->findOneBy(['title' => 'Sneakers']);
+        self::$id = $product->getId();
+
         $this->assertResponseRedirects('/admin/product');
     }
+
+        public function testEditProduct(): void
+        {
+            $client = self::createClient();
+            $user = new InMemoryUser('admin', 'password', ['ROLE_ADMIN']);
+            $client->loginUser($user);
+
+            $crawler = $client->request('GET', '/admin/product/'. self::$id .'/edit');
+
+            $buttonCrawlerNode = $crawler->selectButton('Update');
+            $form = $buttonCrawlerNode->form();
+
+            $form['product[title]'] = 'BienChange';
+            $form['product[description]'] = 'Voici le produit bien changé';
+            $form['product[price]'] = 125;
+            $form['product[category]']->select('Pantalon');
+
+            $client->submit($form);
+
+
+            $this->assertResponseRedirects('/admin/product');
+        }
+
 }
